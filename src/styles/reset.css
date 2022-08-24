@@ -1,3 +1,5 @@
+@import "css-props";
+
 html {
   --font-sans-serif: "Roboto", -apple-system, BlinkMacSystemFont, avenir next,
     avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial,
@@ -25,9 +27,7 @@ div,
 header,
 nav,
 main,
-footer,
-ul,
-ol {
+footer {
   max-inline-size: none;
 }
 
@@ -41,17 +41,17 @@ p,
 figure,
 blockquote,
 dl,
-dd,
-ul,
-ol {
+dd {
   margin: 0;
 }
 
 /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
-ul,
-ol {
+ul[role="list"],
+ol[role="list"] {
   list-style: none;
-  padding-left: 0;
+  max-inline-size: none;
+  padding: 0;
+  margin: 0;
 }
 
 /* Set core root defaults */
