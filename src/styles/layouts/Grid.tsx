@@ -1,24 +1,14 @@
-import PropTypes from "prop-types";
-import React, { useRef, useState } from "react";
-import useResize from "react-resize-observer-hook";
+import { useRef, useState } from "react";
+import useResizeObserver from "react-resize-observer-hook";
 import styled from "styled-components";
-import { InferPropTypes } from "../types";
-
-const GridPropTypes = {
-  min: PropTypes.string,
-  isWide: PropTypes.bool,
-  space: PropTypes.string,
-};
 
 const GridDefaultProps = {
   min: "250px",
   isWide: false,
-  space: "var(--s0)",
+  space: "var(--space-xs)",
 };
 
-type GridProps = InferPropTypes<typeof GridPropTypes, typeof GridDefaultProps>;
-
-const StyledGrid = styled.div<GridProps>`
+const StyledGrid = styled.div<typeof GridDefaultProps>`
   align-content: start;
   display: grid;
   gap: ${(props) => props.space};
@@ -26,18 +16,26 @@ const StyledGrid = styled.div<GridProps>`
     props.isWide ? `repeat(auto-fit, minmax(${props.min}, 1fr))` : "100%"};
 `;
 
-const Grid: React.FC<GridProps> & { defaultProps: Partial<GridProps> } = (
-  props
-) => {
-  const gridRef = useRef<HTMLDivElement>(null);
-  const [isWide, setIsWide] = useState(props.isWide);
+type Props = typeof GridDefaultProps & {
+  children?: JSX.Element | JSX.Element[];
+} & { as: string };
 
-  useResize(gridRef, () => {
+const Grid = ({
+  min = "250px",
+  isWide = false,
+  space = "var(--space-xs)",
+  children,
+  as = "div",
+}: Partial<Props>) => {
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [state, setIsWide] = useState(isWide);
+
+  useResizeObserver(gridRef, () => {
     const element = gridRef.current;
 
     if (element) {
       const test = document.createElement("div");
-      test.style.width = props.min!;
+      test.style.width = GridDefaultProps.min;
       element.appendChild(test);
       const minToPixels = test.offsetWidth;
       element.removeChild(test);
@@ -46,10 +44,13 @@ const Grid: React.FC<GridProps> & { defaultProps: Partial<GridProps> } = (
     }
   });
 
-  return <StyledGrid {...props} isWide={isWide} ref={gridRef} />;
-};
+  const props = { min, space, as };
 
-Grid.propTypes = GridPropTypes;
-Grid.defaultProps = GridDefaultProps;
+  return (
+    <StyledGrid {...props} isWide={state} ref={gridRef}>
+      {children}
+    </StyledGrid>
+  );
+};
 
 export default Grid;
