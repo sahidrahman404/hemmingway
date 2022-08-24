@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { InferPropTypes } from '../types';
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { InferPropTypes } from "../types";
 
 const BoxPropTypes = {
   borderWidth: PropTypes.string,
@@ -9,26 +9,26 @@ const BoxPropTypes = {
 };
 
 const BoxDefaultProps = {
-  borderWidth: 'var(--border-thin)',
+  borderWidth: "var(--border-thin)",
   invert: false,
-  padding: 'var(--s1)',
+  padding: "var(--space-3xs)",
 };
 
-type BoxProps = InferPropTypes<
-  typeof BoxPropTypes,
-  typeof BoxDefaultProps
->;
+type BoxProps = InferPropTypes<typeof BoxPropTypes, typeof BoxDefaultProps>;
 
 const Box = styled.div<BoxProps>`
-  ${props => props.invert ? `
+  ${(props) =>
+    props.invert
+      ? `
     background-color: var(--color-light);
-    filter: invert(100%);` : ''}
+    filter: invert(100%);`
+      : ""}
 
   background-color: inherit;
-  border-width: ${props => props.borderWidth};
-  border: ${props => props.borderWidth} solid;
+  border-width: ${(props) => props.borderWidth};
+  border: ${(props) => props.borderWidth} solid;
   display: block;
-  padding: ${props => props.padding};
+  padding: ${(props) => props.padding};
 
   /* ↓ For high contrast mode */
   outline: var(--border-thin) solid transparent;

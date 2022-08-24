@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { InferPropTypes } from '../types';
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { InferPropTypes } from "../types";
 
 const CoverPropTypes = {
   centered: PropTypes.string,
@@ -10,10 +10,10 @@ const CoverPropTypes = {
 };
 
 const CoverDefaultProps = {
-  centered: 'h1',
-  minHeight: '100vh',
+  centered: "h1",
+  minHeight: "100vh",
   noPad: false,
-  space: 'var(--s1)',
+  space: "var(--space-xs)",
 };
 
 type CoverProps = InferPropTypes<
@@ -24,23 +24,23 @@ type CoverProps = InferPropTypes<
 const Cover = styled.div<CoverProps>`
   display: flex;
   flex-direction: column;
-  min-height: ${props => props.minHeight};
-  padding: ${({ noPad, space }) => !noPad ? space : '0px'};
+  min-height: ${(props) => props.minHeight};
+  padding: ${({ noPad, space }) => (!noPad ? space : "0px")};
 
   > * {
-    margin-top: ${props => props.space};
-    margin-bottom: ${props => props.space};
+    margin-top: ${(props) => props.space};
+    margin-bottom: ${(props) => props.space};
   }
 
-  > :first-child:not(${props => props.centered}) {
+  > :first-child:not(${(props) => props.centered}) {
     margin-top: 0;
   }
 
-  > :last-child:not(${props => props.centered}) {
+  > :last-child:not(${(props) => props.centered}) {
     margin-bottom: 0;
   }
 
-  > ${props => props.centered} {
+  > ${(props) => props.centered} {
     margin-top: auto;
     margin-bottom: auto;
   }

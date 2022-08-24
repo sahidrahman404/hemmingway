@@ -1,7 +1,7 @@
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { InferPropTypes } from '../types';
-import selectSpace from '../utils/selectSpace';
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { InferPropTypes } from "../types";
+import selectSpace from "../utils/selectSpace";
 
 const SwitcherPropTypes = {
   limit: PropTypes.number,
@@ -11,8 +11,8 @@ const SwitcherPropTypes = {
 
 const SwitcherDefaultProps = {
   limit: 4,
-  space: 'var(--s1)',
-  threshold: 'var(--measure)',
+  space: "var(--space-xs)",
+  threshold: "var(--measure)",
 };
 
 type SwitcherProps = InferPropTypes<
@@ -27,17 +27,36 @@ const Switcher = styled.div<SwitcherProps>`
     display: flex;
     flex-wrap: wrap;
     overflow: hidden;
-    margin: calc((${props => selectSpace(props.space!)} / 2) * -1);
+    margin: calc(
+      (
+          ${(props) =>
+              selectSpace(props.space ? props.space : "var(--space-xs)")} / 2
+        ) * -1
+    );
   }
 
   > * > * {
-    flex-basis: calc((${props => props.threshold} - (100% - ${props => selectSpace(props.space!)})) * 999);
-    margin: calc(${props => selectSpace(props.space!)} / 2);
+    flex-basis: calc(
+      (
+          ${(props) => props.threshold} -
+            (
+              100% -
+                ${(props) =>
+                  selectSpace(props.space ? props.space : "var(--space-xs)")}
+            )
+        ) * 999
+    );
+    margin: calc(
+      ${(props) => selectSpace(props.space ? props.space : "var(--space-xs)")} /
+        2
+    );
     flex-grow: 1;
   }
 
-  > * > :nth-last-child(n+${props => props.limit! + 1}),
-  > * > :nth-last-child(n+${props => props.limit! + 1}) ~ * {
+  > * > :nth-last-child(n + ${(props) => (props.limit ? props.limit : 4 + 1)}),
+  > *
+    > :nth-last-child(n + ${(props) => (props.limit ? props.limit : 4 + 1)})
+    ~ * {
     flex-basis: 100%;
   }
 `;

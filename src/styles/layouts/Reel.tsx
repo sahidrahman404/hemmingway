@@ -1,8 +1,8 @@
-import PropTypes from 'prop-types';
-import React, { useRef, useState } from 'react';
-import useResize from 'react-resize-observer-hook';
-import styled, { css } from 'styled-components';
-import { InferPropTypes } from '../types';
+import PropTypes from "prop-types";
+import React, { useRef, useState } from "react";
+import useResizeObserver from "react-resize-observer-hook";
+import styled, { css } from "styled-components";
+import { InferPropTypes } from "../types";
 
 const ReelPropTypes = {
   height: PropTypes.string,
@@ -11,46 +11,50 @@ const ReelPropTypes = {
   space: PropTypes.string,
   thumbColor: PropTypes.string,
   trackColor: PropTypes.string,
+  children: PropTypes.node,
+  as: PropTypes.any,
 };
 
 const ReelDefaultProps = {
-  itemWidth: 'auto',
+  itemWidth: "auto",
   overflowing: false,
-  space: '1rem',
-  height: 'auto',
-  trackColor: '#000',
-  thumbColor: '#fff',
+  space: "1rem",
+  height: "auto",
+  trackColor: "var(--color-secondary)",
+  thumbColor: "var(--color-primary)",
 };
 
-type ReelProps = InferPropTypes<
-  typeof ReelPropTypes,
-  typeof ReelDefaultProps
->;
+type ReelProps = InferPropTypes<typeof ReelPropTypes, typeof ReelDefaultProps>;
 
 const StyledReel = styled.div<ReelProps>`
   display: flex;
-  height: ${props => props.height};
+  height: ${(props) => props.height};
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-color: ${props => props.thumbColor} ${props => props.trackColor};
+  scrollbar-color: ${(props) => props.thumbColor} ${(props) => props.trackColor};
 
   ::-webkit-scrollbar {
     height: 1rem;
   }
 
   ::-webkit-scrollbar-track {
-    background-color: ${props => props.trackColor};
+    background-color: ${(props) => props.trackColor};
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: ${props => props.trackColor};
-    background-image: linear-gradient(${props => props.trackColor} 0, ${props => props.trackColor} 0.25rem, ${props => props.thumbColor} 0.25rem, ${props => props.thumbColor} 0.75rem, ${props => props.trackColor} 0.75rem);
+    background-color: ${(props) => props.trackColor};
+    background-image: linear-gradient(
+      ${(props) => props.trackColor} 0,
+      ${(props) => props.trackColor} 0.25rem,
+      ${(props) => props.thumbColor} 0.25rem,
+      ${(props) => props.thumbColor} 0.75rem,
+      ${(props) => props.trackColor} 0.75rem
+    );
   }
 
   > * {
-    flex: 0 0 ${props => props.itemWidth};
+    flex: 0 0 ${(props) => props.itemWidth};
   }
-
 
   > img {
     height: 100%;
@@ -59,19 +63,23 @@ const StyledReel = styled.div<ReelProps>`
   }
 
   > * + * {
-    margin-left: ${props => props.space};
+    margin-left: ${(props) => props.space};
   }
 
-  ${props => props.overflowing && css`
-    padding-bottom: ${props.space};
-  `}
+  ${(props) =>
+    props.overflowing &&
+    css`
+      padding-bottom: ${props.space};
+    `}
 `;
 
-const Reel: React.FC<ReelProps> & {defaultProps: Partial<ReelProps>} = (props) => {
+const Reel: React.FC<ReelProps> & { defaultProps: Partial<ReelProps> } = (
+  props
+) => {
   const reelRef = useRef<HTMLDivElement>(null);
   const [overflowing, setOverflowing] = useState(props.overflowing);
 
-  useResize(reelRef, (entry) => {
+  useResizeObserver(reelRef, (entry) => {
     const element = reelRef.current;
 
     if (element) {
@@ -79,13 +87,7 @@ const Reel: React.FC<ReelProps> & {defaultProps: Partial<ReelProps>} = (props) =
     }
   });
 
-  return (
-    <StyledReel
-      {...props}
-      overflowing={overflowing}
-      ref={reelRef}
-    />
-  );
+  return <StyledReel {...props} overflowing={overflowing} ref={reelRef} />;
 };
 
 Reel.propTypes = ReelPropTypes;

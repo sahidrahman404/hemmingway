@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { InferPropTypes } from '../types';
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { InferPropTypes } from "../types";
 
 const ClusterPropTypes = {
   align: PropTypes.string,
@@ -9,9 +9,9 @@ const ClusterPropTypes = {
 };
 
 const ClusterDefaultProps = {
-  align: 'center',
-  justify: 'flex-start',
-  space: 'var(--s1)',
+  align: "center",
+  justify: "flex-start",
+  space: "var(--space-xs)",
 };
 
 type ClusterProps = InferPropTypes<
@@ -21,15 +21,15 @@ type ClusterProps = InferPropTypes<
 
 const Cluster = styled.div<ClusterProps>`
   > * {
-    align-items: ${props => props.align};
+    align-items: ${(props) => props.align};
     display: flex;
-    justify-content: ${props => props.justify};
-    margin: calc(${props => props.space} / 2 * -1);
+    justify-content: ${(props) => props.justify};
+    margin: calc(${(props) => props.space} / 2 * -1);
     flex-wrap: wrap;
   }
 
   > * > * {
-    margin: calc(${props => props.space} / 2);
+    margin: calc(${(props) => props.space} / 2);
   }
 `;
 

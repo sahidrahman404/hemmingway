@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { InferPropTypes } from '../types';
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { InferPropTypes } from "../types";
 
 const StackPropTypes = {
   recursive: PropTypes.bool,
@@ -10,7 +10,7 @@ const StackPropTypes = {
 
 const StackDefaultProps = {
   recursive: false,
-  space: 'var(--s1)',
+  space: "var(--space-xs)",
 };
 
 type StackProps = InferPropTypes<
@@ -23,15 +23,17 @@ const Stack = styled.div<StackProps>`
   flex-direction: column;
   justify-content: flex-start;
 
-  ${props => props.recursive ? '' : '>'} * + * {
-    margin-top: ${props => props.space};
+  ${(props) => (props.recursive ? "" : ">")} * + * {
+    margin-top: ${(props) => props.space}!important;
   }
 
-  ${({ splitAfter }) => splitAfter ? `
+  ${({ splitAfter }) =>
+    splitAfter
+      ? `
     .stack-l > :nth-child(${splitAfter}) {
       margin-bottom: auto;
     }`
-    : ''}
+      : ""}
 `;
 
 Stack.propTypes = StackPropTypes;
