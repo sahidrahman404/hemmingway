@@ -1,12 +1,11 @@
 :root {
   --measure: 60ch;
-  --s0: 1em;
 
   /* color */
   --color-primary: hsl(0, 74%, 42%);
   --color-primary-light: hsl(0, 53%, 94%);
   --color-primary-dark: hsl(0, 74%, 21%);
-  --color-secondary: hsl(41, 96%, 40%);
+  --color-secondary: hsl(41, 96%, 50%);
   --color-secondary-light: hsl(39, 67%, 94%);
   --color-secondary-dark: hsl(42, 95%, 8%);
   --color-light: hsl(210, 20%, 98%);
