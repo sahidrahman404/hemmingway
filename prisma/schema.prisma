@@ -49,14 +49,29 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum UserMembership {
+    Basic
+    Premium
+}
+
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
+    id             String         @id @default(cuid())
+    name           String?
+    email          String?        @unique
+    emailVerified  DateTime?
+    image          String?
+    bio            String?
+    userMembership UserMembership @default(Basic)
+
+    accounts          Account[]
+    sessions          Session[]
+    ReadingList       ReadingList[]
+    Comment           Comment[]
+    UsersOnCategories UsersOnCategories[]
+    LikeOnComment     LikeOnComment[]
+    LikeOnPosts       LikeOnPosts[]
+    following         Follower[]          @relation("following")
+    follower          Follower[]          @relation("follower")
 }
 
 model VerificationToken {
@@ -65,4 +80,113 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model UsersOnCategories {
+    id           String   @id @default(cuid())
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId       String
+    category     Category @relation(fields: [categoriesId], references: [id], onDelete: Cascade)
+    categoriesId String
+
+    @@unique([userId, categoriesId])
+}
+
+model Category {
+    id                String              @id @default(cuid())
+    categoryTitle     String              @unique
+    ReadingList       ReadingList[]
+    UsersOnCategories UsersOnCategories[]
+    PostsOnCategories PostsOnCategories[]
+}
+
+model PostsOnCategories {
+    id           String   @id @default(cuid())
+    post         Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId       String
+    category     Category @relation(fields: [categoriesId], references: [id], onDelete: Cascade)
+    categoriesId String
+
+    @@unique([postId, categoriesId])
+}
+
+enum PostAccess {
+    Free
+    Premium
+}
+
+model Post {
+    id         String     @id @default(cuid())
+    title      String
+    createdAt  DateTime   @default(now())
+    updatedAt  DateTime   @updatedAt
+    postAccess PostAccess @default(Free)
+
+    PostImage         PostImage[]
+    ReadingList       ReadingList[]
+    Comment           Comment[]
+    PostsOnCategories PostsOnCategories[]
+    LikeOnPosts       LikeOnPosts[]
+}
+
+model PostImage {
+    id     String @id @default(cuid())
+    url    String
+    post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId String
+}
+
+model ReadingList {
+    id           String   @id @default(cuid())
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId       String
+    post         Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId       String
+    category     Category @relation(fields: [categoriesId], references: [id], onDelete: Cascade)
+    categoriesId String
+
+    @@unique([userId, postId, categoriesId])
+}
+
+model Comment {
+    id            String          @id @default(cuid())
+    message       String
+    createdAt     DateTime        @default(now())
+    updatedAt     DateTime        @updatedAt
+    user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId        String
+    post          Post            @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId        String
+    parent        Comment?        @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
+    children      Comment[]       @relation("ParentChild")
+    parentId      String?
+    LikeOnComment LikeOnComment[]
+}
+
+model LikeOnComment {
+    id        String  @id @default(cuid())
+    comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+    commentId String
+    user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String
+
+    @@unique([commentId, userId])
+}
+
+model LikeOnPosts {
+    id     String @id @default(cuid())
+    post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String
+
+    @@unique([postId, userId])
+}
+
+model Follower {
+    id          String @id @default(cuid())
+    following   User   @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+    followingId String
+    follower    User   @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+    followerId  String
 }

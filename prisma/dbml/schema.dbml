@@ -40,8 +40,17 @@ Table User {
   email String [unique]
   emailVerified DateTime
   image String
+  bio String
+  userMembership UserMembership [not null, default: 'Basic']
   accounts Account [not null]
   sessions Session [not null]
+  ReadingList ReadingList [not null]
+  Comment Comment [not null]
+  UsersOnCategories UsersOnCategories [not null]
+  LikeOnComment LikeOnComment [not null]
+  LikeOnPosts LikeOnPosts [not null]
+  following Follower [not null]
+  follower Follower [not null]
 }
 
 Table VerificationToken {
@@ -54,6 +63,163 @@ Table VerificationToken {
   }
 }
 
+Table UsersOnCategories {
+  id String [pk]
+  user User [not null]
+  userId String [not null]
+  category Category [not null]
+  categoriesId String [not null]
+
+  indexes {
+    (userId, categoriesId) [unique]
+  }
+}
+
+Table Category {
+  id String [pk]
+  categoryTitle String [unique, not null]
+  ReadingList ReadingList [not null]
+  UsersOnCategories UsersOnCategories [not null]
+  PostsOnCategories PostsOnCategories [not null]
+}
+
+Table PostsOnCategories {
+  id String [pk]
+  post Post [not null]
+  postId String [not null]
+  category Category [not null]
+  categoriesId String [not null]
+
+  indexes {
+    (postId, categoriesId) [unique]
+  }
+}
+
+Table Post {
+  id String [pk]
+  title String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  postAccess PostAccess [not null, default: 'Free']
+  PostImage PostImage [not null]
+  ReadingList ReadingList [not null]
+  Comment Comment [not null]
+  PostsOnCategories PostsOnCategories [not null]
+  LikeOnPosts LikeOnPosts [not null]
+}
+
+Table PostImage {
+  id String [pk]
+  url String [not null]
+  post Post [not null]
+  postId String [not null]
+}
+
+Table ReadingList {
+  id String [pk]
+  user User [not null]
+  userId String [not null]
+  post Post [not null]
+  postId String [not null]
+  category Category [not null]
+  categoriesId String [not null]
+
+  indexes {
+    (userId, postId, categoriesId) [unique]
+  }
+}
+
+Table Comment {
+  id String [pk]
+  message String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user User [not null]
+  userId String [not null]
+  post Post [not null]
+  postId String [not null]
+  parent Comment
+  children Comment [not null]
+  parentId String
+  LikeOnComment LikeOnComment [not null]
+}
+
+Table LikeOnComment {
+  id String [pk]
+  comment Comment [not null]
+  commentId String [not null]
+  user User [not null]
+  userId String [not null]
+
+  indexes {
+    (commentId, userId) [unique]
+  }
+}
+
+Table LikeOnPosts {
+  id String [pk]
+  post Post [not null]
+  postId String [not null]
+  user User [not null]
+  userId String [not null]
+
+  indexes {
+    (postId, userId) [unique]
+  }
+}
+
+Table Follower {
+  id String [pk]
+  following User [not null]
+  followingId String [not null]
+  follower User [not null]
+  followerId String [not null]
+}
+
+Enum UserMembership {
+  Basic
+  Premium
+}
+
+Enum PostAccess {
+  Free
+  Premium
+}
+
 Ref: Account.userId > User.id [delete: Cascade]
 
 Ref: Session.userId > User.id [delete: Cascade]
+
+Ref: UsersOnCategories.userId > User.id [delete: Cascade]
+
+Ref: UsersOnCategories.categoriesId > Category.id [delete: Cascade]
+
+Ref: PostsOnCategories.postId > Post.id [delete: Cascade]
+
+Ref: PostsOnCategories.categoriesId > Category.id [delete: Cascade]
+
+Ref: PostImage.postId > Post.id [delete: Cascade]
+
+Ref: ReadingList.userId > User.id [delete: Cascade]
+
+Ref: ReadingList.postId > Post.id [delete: Cascade]
+
+Ref: ReadingList.categoriesId > Category.id [delete: Cascade]
+
+Ref: Comment.userId > User.id [delete: Cascade]
+
+Ref: Comment.postId > Post.id [delete: Cascade]
+
+Ref: Comment.parentId - Comment.id [delete: Cascade]
+
+Ref: LikeOnComment.commentId > Comment.id [delete: Cascade]
+
+Ref: LikeOnComment.userId > User.id [delete: Cascade]
+
+Ref: LikeOnPosts.postId > Post.id [delete: Cascade]
+
+Ref: LikeOnPosts.userId > User.id [delete: Cascade]
+
+Ref: Follower.followingId > User.id [delete: Cascade]
+
+Ref: Follower.followerId > User.id [delete: Cascade]
