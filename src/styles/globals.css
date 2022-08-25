@@ -40,3 +40,20 @@ a {
 a:hover {
   text-decoration: none;
 }
+
+::selection {
+  background: var(--color-dark);
+  color: var(--color-light);
+}
+
+body::-webkit-scrollbar {
+  width: var(--space-2xs); /* width of the entire scrollbar */
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--color-light); /* color of the tracking area */
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--color-primary); /* color of the scroll thumb */
+}
